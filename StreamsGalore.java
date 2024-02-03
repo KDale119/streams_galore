@@ -1,5 +1,5 @@
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class StreamsGalore {
   public static void main(String[] args) {
@@ -15,12 +15,15 @@ public class StreamsGalore {
 
     List<Student> students = Arrays.asList(student1, student2, student3);
 
+
     /*****************************************************
      * Get student with exact match name "jayesh"
      *****************************************************/
 
     System.out.println("--------------------");
 
+    Student jayesh = students.stream().filter(student -> student.getName().equals("Jayesh")).findFirst().get();
+    System.out.println(jayesh.getName());
 
 
     /*****************************************************
@@ -29,17 +32,30 @@ public class StreamsGalore {
 
     System.out.println("--------------------");
 
+    Student matchingAddress = students.stream().filter(student -> student.getAddress().getZipcode().equals("1235")).findFirst().get();
+    System.out.println(matchingAddress.getName());
+
+
     /*****************************************************
      * Get all student having mobile numbers 3333.
      *****************************************************/
   
     System.out.println("--------------------");
 
+    List<Student> mobileMatch = students.stream().filter(student -> student.getMobileNumbers().stream().anyMatch(mobileNumber -> mobileNumber.getNumber().equals("3333"))).toList();
+    System.out.println(mobileMatch.stream().map(Student::getName).toList());
+
+
     /*****************************************************
      * Get all student having mobile number 1233 and 1234
      *****************************************************/
     
     System.out.println("--------------------");
+    List<String> studentName = students.stream().filter(student -> student.getMobileNumbers().stream().map(MobileNumber::getNumber).toList()
+            .containsAll(Arrays.asList("1233", "1234"))).map(Student::getName).toList();
+    System.out.println(studentName);
+
+
 
     /*****************************************************
      * Create a List<Student> from the List<TempStudent>
@@ -53,17 +69,28 @@ public class StreamsGalore {
     
     System.out.println("--------------------");
 
+    List<Student> copy = tmpStudents.stream().map(tmp ->new Student(tmp.name, tmp.age, tmp.address, tmp.mobileNumbers)).toList();
+    copy.forEach(System.out::println);
+
+
     /*****************************************************
      * Convert List<Student> to List<String> of student name
      *****************************************************/
     
     System.out.println("--------------------");
 
+    List<String> name = tmpStudents.stream().map(tmp -> tmp.name).toList();
+    System.out.println(String.join(",", name));
+    System.out.println(name);
+
     /*****************************************************
      * Convert List<students> to String
      *****************************************************/
 
     System.out.println("--------------------");
+
+    List<String> names = students.stream().map(Student::getName).toList();
+    System.out.println(names);
 
     /*****************************************************
      * Change the case of List<String>
@@ -72,6 +99,12 @@ public class StreamsGalore {
 
     System.out.println("--------------------");
 
+    List<String> upperCase = nameList.stream().map(String::toUpperCase).collect(Collectors.toList());
+    upperCase.forEach(System.out::println);
+
+
+
+
     /*****************************************************
      * Sort List<String>
      *****************************************************/
@@ -79,12 +112,10 @@ public class StreamsGalore {
 
     System.out.println("--------------------");
 
-    /*****************************************************
-     * Conditionally apply Filter condition, say if flag is enabled then
-     *****************************************************/
-    
-    System.out.println("After filter and conditional sorting :");
-    
+    Collections.sort(namesList);
+    namesList.forEach(System.out::println);
+
+
 
   }
 }
